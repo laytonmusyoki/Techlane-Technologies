@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Add_Product {% endblock %}
+
+{% block content %}
+
+<main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+    <div class="title-group mb-3">
+        <h1 class="h2 mb-0">Add new product</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-12">
+            <div class="custom-block custom-block-contact">
+                <form class="custom-form profile-form" action="#" method="post" role="form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for form in forms %}
+                    {{form}}
+                    {% endfor %}
+                    
+
+                    <div class="d-flex">
+                        <button type="reset" class="form-control me-3">
+                            Reset
+                        </button>
+
+                        <input type="submit" value="Add item" class="form-control ms-2" style="background: rgb(5, 54, 102);color: #fff;">
+                            
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}

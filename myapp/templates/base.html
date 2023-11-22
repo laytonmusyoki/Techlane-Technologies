@@ -1,0 +1,397 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="description" content="">
+        <meta name="author" content="Tooplate">
+
+        <title>{% block title %} {% endblock %}</title>
+
+        <!-- CSS FILES -->      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
+
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+        <link href="/static/css/bootstrap-icons.css" rel="stylesheet">
+
+        <link href="/static/css/apexcharts.css" rel="stylesheet">
+
+        <link href="/static/css/tooplate-mini-finance.css" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/main.css">
+
+        <!-- js -->
+
+        <script type="text/javascript">
+            var user = '{{request.user}}'
+    
+            function getToken(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            const csrftoken = getToken('csrftoken');
+    
+    
+        </script>
+
+        <!-- end -->
+
+    </head>
+    
+    <body>
+        <header class="navbar sticky-top flex-md-nowrap">
+            <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <i class="bi-box"></i>
+                    TechLane Technologies
+                </a>
+            </div>
+
+            <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="#" method="get" role="form">
+                <input class="form-control" name="search" type="text" placeholder="Search" aria-label="Search">
+            </form> -->
+
+            <div class="navbar-nav me-lg-2">
+                <div class="nav-item text-nowrap d-flex align-items-center">
+                    <!-- cart  -->
+                    <div class="all d-flex align-items-center">
+                        <i class="bi-cart me-2"></i>
+                        <p id="cart-total">{{cartItems}}</p>
+                    </div> 
+
+                    {% if request.user.is_authenticated %}
+                    {% else %}
+                    <a href="{% url 'signin' %}"class="btn btn-warning">Login</a>
+                    {% endif %}
+                    <!-- end -->
+
+                    <div class="dropdown ps-1">
+                        <a class="nav-link dropdown-toggle text-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi-three-dots-vertical"></i>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-social bg-white shadow">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-4">
+                                        <a class="dropdown-item text-center" href="#">
+                                            <img src="/static/images/social/search.png" class="profile-image img-fluid" alt="">
+                                            <span class="d-block">Google</span>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-4">
+                                        <a class="dropdown-item text-center" href="#">
+                                            <img src="/static/images/social/spotify.png" class="profile-image img-fluid" alt="">
+                                            <span class="d-block">Spotify</span>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-4">
+                                        <a class="dropdown-item text-center" href="#">
+                                            <img src="/static/images/social/telegram.png" class="profile-image img-fluid" alt="">
+                                            <span class="d-block">Telegram</span>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-4">
+                                        <a class="dropdown-item text-center" href="#">
+                                            <img src="/static/images/social/snapchat.png" class="profile-image img-fluid" alt="">
+                                            <span class="d-block">Snapchat</span>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-4">
+                                        <a class="dropdown-item text-center" href="#">
+                                            <img src="/static/images/social/tiktok.png" class="profile-image img-fluid" alt="">
+                                            <span class="d-block">Tiktok</span>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-4">
+                                        <a class="dropdown-item text-center" href="#">
+                                            <img src="/static/images/social/youtube.png" class="profile-image img-fluid" alt="">
+                                            <span class="d-block">Youtube</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dropdown px-3">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if profile.image %}
+                            <img src="{{profile.imageURL}}" class="profile-image img-fluid" alt="">
+                            {% else %}
+                            <img src="/static/images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid" alt="">
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu bg-white shadow">
+                            <li>
+                                <div class="dropdown-menu-profile-thumb d-flex">
+                                    {% if profile.image %}
+                                    <img src="{{profile.imageURL}}" class="profile-image img-fluid me-3" alt="">
+                                    {% else %}
+                                    <img src="/static/images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid" alt="">
+                                    {% endif %}
+
+                                    <div class="d-flex flex-column">
+                                        <small>{{request.user}}</small>
+                                        <a href="#">{{profile.email}}</a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="{% url 'profile' %}">
+                                    <i class="bi-person me-2"></i>
+                                    Profile
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="{% url 'settings' %}">
+                                    <i class="bi-gear me-2"></i>
+                                    Settings
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="{% url 'helpcenter' %}">
+                                    <i class="bi-question-circle me-2"></i>
+                                    Help
+                                </a>
+                            </li>
+
+                            <li class="border-top mt-3 pt-2 mx-4">
+                                <a class="dropdown-item ms-0 me-0" href="{% url 'signin' %}">
+                                    <i class="bi-box-arrow-left me-2"></i>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container-fluid">
+            <div class="row">
+                <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
+                    <div class="position-sticky py-4 px-3 sidebar-sticky">
+                        <ul class="nav flex-column h-100">
+                            {% if request.user.groups.all.0.name == 'admin' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'all_products' %}">
+                                    <i class="bi-box me-2"></i>
+                                    Manage Products
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'transactions' %}">
+                                    <i class="bi-cart me-2"></i>
+                                    Transations
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'profile' %}">
+                                    <i class="bi-person me-2"></i>
+                                    Profile
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'settings' %}">
+                                    <i class="bi-gear me-2"></i>
+                                    Settings
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'helpcenter' %}">
+                                    <i class="bi-question-circle me-2"></i>
+                                    Help Center
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="{% url 'index' %}">
+                                    <i class="bi-house-fill me-2"></i>
+                                    Overview
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'index' %}">
+                                    <i class="bi-house me-2"></i>
+                                    products
+                                </a>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cart' %}">
+                                    <i class="bi-cart me-2"></i>
+                                    Cart
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'profile' %}">
+                                    <i class="bi-person me-2"></i>
+                                    Profile
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'settings' %}">
+                                    <i class="bi-gear me-2"></i>
+                                    Settings
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'helpcenter' %}">
+                                    <i class="bi-question-circle me-2"></i>
+                                    Help Center
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li class="nav-item featured-box mt-lg-5 mt-4 mb-4">
+                                <img src="images/credit-card.png" class="img-fluid" alt="">
+
+                                <a class="btn custom-btn" href="#" style="border-radius: 30px;">Upgrade</a>
+                            </li>
+
+                            <li class="nav-item border-top mt-auto pt-2">
+                                <a class="nav-link" href="{% url 'signin' %}">
+                                    <i class="bi-box-arrow-left me-2"></i>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+               
+                 <!-- JAVASCRIPT FILES -->
+        <script src="/static/js/jquery.min.js"></script>
+        <script src="/static/js/bootstrap.bundle.min.js"></script>
+        <script src="/static/js/apexcharts.min.js"></script>
+        <script src="/static/js/custom.js"></script>
+                <script src="/static/js/cart.js"></script>
+                {% block content %}
+                {% endblock %}
+
+                
+                
+            </div>
+        </div>
+
+       
+
+        <script type="text/javascript">
+            var options = {
+              series: [13, 43, 22],
+              chart: {
+              width: 380,
+              type: 'pie',
+            },
+            labels: ['Balance', 'Expense', 'Credit Loan',],
+            responsive: [{
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 200
+                },
+                legend: {
+                  position: 'bottom'
+                }
+              }
+            }]
+            };
+
+            var chart = new ApexCharts(document.querySelector("#pie-chart"), options);
+            chart.render();
+        </script>
+
+        <script type="text/javascript">
+            var options = {
+              series: [{
+              name: 'Income',
+              data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+            }, {
+              name: 'Expense',
+              data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+            }, {
+              name: 'Transfer',
+              data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+            }],
+              chart: {
+              type: 'bar',
+              height: 350
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+              },
+            },
+            dataLabels: {
+              enabled: false
+            },
+            stroke: {
+              show: true,
+              width: 2,
+              colors: ['transparent']
+            },
+            xaxis: {
+              categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+            },
+            yaxis: {
+              title: {
+                text: '$ (thousands)'
+              }
+            },
+            fill: {
+              opacity: 1
+            },
+            tooltip: {
+              y: {
+                formatter: function (val) {
+                  return "$ " + val + " thousands"
+                }
+              }
+            }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+        </script>
+
+
+    </body>
+</html>

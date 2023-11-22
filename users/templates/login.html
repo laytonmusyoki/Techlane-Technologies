@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - codingnepalweb.com -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>MiniElectronics | Login </title>
+   <link rel="icon" href="/static/assets/images/cross.jpg">
+   <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <section class="wrapper">
+      {% for msg in messages %}
+                    <div class="alert alert-{{msg.level_tag}} alert-dismissible fade show  name" role="alert" >
+                    <strong> {{msg.message}}</strong>
+                    <button type="button" class="btn-close name1" data-bs-dismiss="alert" aria-label="close"></button>
+                </div>
+    
+                {% endfor %}
+      <div class="form signup">
+        <header><a href="{% url 'register' %}" style="color: white;">Signup</a></header>
+        <form action="" method="POST">
+          <input type="text" placeholder="Full name" required />
+          <input type="text" placeholder="Email address" required />
+          <input type="password" placeholder="Password" required />
+          <div class="checkbox">
+            <input type="checkbox" id="signupCheck" />
+            <label for="signupCheck">I accept all terms & conditions</label>
+          </div>
+          <input type="button" value="Signup" />
+        </form>
+      </div>
+
+      <div class="form login">
+        <header>Login</header>
+        <form action="" method="POST">
+          {% csrf_token %}
+          <input type="text" name="username" placeholder="Enter username" required />
+          <input type="password"name="password" id="password" placeholder="Password" required />
+          <div class="checkbox">
+            <input type="checkbox" id="showpwd" /> show password
+          </div>
+          <p>Forgot password?<a href="#">Click Here</a></p>
+          <input type="submit" value="Login" />
+        </form>
+      </div>
+
+      <script>
+        const pwd=document.getElementById('password');
+        const showpwd=document.getElementById('showpwd');
+
+        showpwd.addEventListener('change',function(){
+          if(showpwd.checked){
+            pwd.type='text';
+          }
+          else{
+            pwd.type='password';
+          }
+        })
+      </script>
+
+      <script>
+        const wrapper = document.querySelector(".wrapper"),
+          signupHeader = document.querySelector(".signup header"),
+          loginHeader = document.querySelector(".login header");
+          wrapper.classList.add("active");
+          signupHeader.wrapper.classList.remove("active");
+        
+        
+      </script>
+      <script src="/static/bootstrap/js/bootstrap.js"></script>
+    </section>
+  </body>
+</html>

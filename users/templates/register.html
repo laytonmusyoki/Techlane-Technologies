@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - codingnepalweb.com -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>MiniElectronics | Signup</title>
+   <link rel="icon" href="/static/assets/images/cross.jpg">
+   <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <section class="wrapper">
+      <div class="form signup">
+        <header>Signup</header>
+        {% if forms.errors %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                                        {% for key, error in forms.errors.items %}
+                                                        <strong>{{ error }}</strong>
+                                            {% endfor %}
+                        <button type="button" class="btn-close name1" data-bs-dismiss="alert" aria-label="close"></button>
+                    </div>
+
+                {% endif %}
+        <form action="" method="POST">
+          {% csrf_token %}
+          {% for form in forms %}
+          {{form}}
+          {% endfor %}
+          <div class="checkbox">
+            <input type="checkbox" id="signupCheck" required />
+            <label for="signupCheck">I accept all terms & conditions</label>
+          </div>
+          <input type="submit" value="Signup" />
+        </form>
+      </div>
+
+      <div class="form login">
+        <header><a href="{% url 'signin' %}">Login</a></header>
+      </div>
+      <script>
+        const wrapper = document.querySelector(".wrapper"),
+          signupHeader = document.querySelector(".signup header"),
+          loginHeader = document.querySelector(".login header");
+        loginHeader.classList.add("active");
+          
+      </script>
+      <script src="/static/bootstrap/js/bootstrap.js"></script>
+    </section>
+  </body>
+</html>

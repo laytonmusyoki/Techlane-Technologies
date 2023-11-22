@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Cart {% endblock %}
+
+
+{% block content %}
+
+
+
+<main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+    <div class="title-group mb-3">
+        <h1 class="h2 mb-0">Checkout</h1>
+    </div>
+
+
+    <!-- start -->
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box-element" id="form-wrapper">
+                <form action="" id="form">
+                    <div id="user-info">
+                        <div class="col-lg-12">
+                            <input type="text" class="form-control" name="name" placeholder="Name.." required>
+                        </div>
+                        <div class="col-lg-12">
+                            <input type="email" class="form-control" style="width: 100%;" name="email" placeholder="Email.." required>
+                        </div>
+                    </div>
+
+                    <div id="shipping-info">
+                        <hr>
+                        <p><strong>Shipping Information:</strong></p>
+                        <hr>
+                        <div class="col-lg-12">
+                            <input type="text" class="form-control" name="address" placeholder="Address..">
+                        </div>
+                        <div class="col-lg-12">
+                            <input type="text" class="form-control" name="city" placeholder="City..">
+                        </div>
+                        <div class="col-lg-12">
+                            <input type="text" class="form-control" name="state" placeholder="State..">
+                        </div>
+                        <div class="col-lg-12">
+                            <input type="text" class="form-control" name="zipcode" placeholder="Zip code..">
+                        </div>
+                        <div class="col-lg-12">
+                            <input type="text" class="form-control" name="country" placeholder="Country..">
+                        </div>
+                    </div>
+                     
+                    <hr>
+                    <input id="form-button" class="btn btn-success btn-dark" style="border-radius: 5px;" type="submit" value="Continue">
+                </form>
+            </div>
+            <br>
+
+            <div class="box-element hidden" id="payment-info">
+                <small>Paypal Options</small>
+                <button class="btn btn-success" id="make-payment" style="border-radius: 5px;">Make Payment</button>
+            </div>
+
+        </div>
+        <div class="col-lg-6">
+            <div class="box-element">
+                <a class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+                <hr>
+                <h3 style="color: #555;">Order Summary</h3>
+                <hr>
+                {% for item in items %}
+                <div class="cart-row">
+                    <div style="flex: 2;"><img class="row-image" src="{{item.product.imageURL}}" alt=""></div>
+                    <div style="flex: 2;"><p>{{item.product.name}}</p></div>
+                    <div style="flex: 1;"><p>${{item.product.price}}</p></div>
+                    <div style="flex: 1;"><p>x{{item.quantity}}</p></div>
+                </div>
+                {% endfor %}
+                <h6>Items: {{order.get_cart_items}}</h6>
+                <h6>Total: Ksh {{order.get_cart_total}}</h6>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var shipping = '{{order.shipping}}'
+        var total = '{{order.get_cart_total|floatformat:2}}'
+
+        if (shipping == "False"){
+            document.getElementById("shipping-info").innerHTML = ""
+        }
+
+        if (user == "AnonymousUser"){
+            document.getElementById("user-info").innerHTML = ""
+        }
+
+        if (shipping == "False" && user != "AnonymousUser"){
+            document.getElementById("form-wrapper").classList.add("hidden")
+            document.getElementById("payment-info").classList.remove("hidden")
+        }
+
+        var form = document.getElementById('form')
+        
+        form.addEventListener('submit', function(e){
+            e.preventDefault()
+            console.log('Form submitted...')
+            document.getElementById("form-button").classList.add("hidden")
+            document.getElementById("payment-info").classList.remove("hidden")
+        })
+
+        document.getElementById('make-payment').addEventListener('click', function(e){
+            submitFormData()
+        })
+
+        function submitFormData(){
+            console.log('Payment button clicked!!')
+
+            var userFormData = {
+                'name':null,
+                'email':null,
+                'total':total,
+            }
+
+            var shippingInfo = {
+                'address':null,
+                'city':null,
+                'state':null,
+                'zipcode':null,
+                'country':null,
+            }
+
+            if(shipping != "False"){
+                shippingInfo.address = form.address.value
+                shippingInfo.city = form.city.value
+                shippingInfo.state = form.state.value
+                shippingInfo.zipcode = form.zipcode.value
+                shippingInfo.country = form.country.value
+            }
+
+            if(user == "AnonymousUser"){
+                userFormData.name = form.name.value
+                userFormData.email = form.email.value
+            }
+
+            var url = "{% url 'process_order' %}"
+            fetch(url, {
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                    'X-CSRFToken':csrftoken,
+                },
+                body:JSON.stringify({"form":userFormData, "shipping":shippingInfo}),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+                alert('Transaction completed'); 
+                cart = {}
+                // document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+                window.location.href = "{% url 'index' %}"
+            })
+        }
+    </script>
+
+    <!-- end -->
+</main>
+
+{% endblock %}

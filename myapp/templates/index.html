@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+<main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+    <div class="title-group mb-3">
+        <h1 class="h2 mb-0">Products</h1>
+    </div>
+    {% for msg in messages %}
+                    <div class="alert alert-{{msg.level_tag}} alert-dismissible fade show  name" role="alert" >
+                    <strong> {{msg.message}}</strong>
+                    <button type="button" class="btn-close name1" data-bs-dismiss="alert" aria-label="close"></button>
+                </div>
+    
+                {% endfor %}
+    <div class="row">
+        {% for product in products %}
+        <div class="col-lg-4">
+            <img class="thumbnail" src="{{product.imageURL}}" alt="">
+            <div class="box-element product">
+                <h6><strong>{{product.name}}</strong></h6>
+                <hr>
+                <button data-product={{product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+                <!-- <a class="btn btn-outline-success" href="#">View</a> -->
+                <p style="display: inline-block;float: right;">Ksh {{product.price|floatformat:2}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% include 'includes/footer.html' %}
+</main>
+
+<script>
+    var updateBtns = document.getElementsByClassName('update-cart')
+
+for (i = 0; i < updateBtns.length; i++){
+    updateBtns[i].addEventListener('click', function(){
+        var productId = this.dataset.product
+        var action = this.dataset.action
+        console.log('productId: ', productId, 'action: ', action)
+
+        console.log('User:', user)
+        if(user == 'AnonymousUser'){
+            console.log('Not logged in')
+        }else{
+            updateUserOrder(productId, action)
+        }
+    })
+}
+
+function updateUserOrder(productId, action){
+    console.log('User is logged in, sending data')
+    var url = '/update_item/'
+
+    fetch(url, {
+        method: 'POST',
+        headers:{
+            'Content-Type':'application/json',
+            'X-CSRFToken':csrftoken,
+        },
+        body:JSON.stringify({'productId':productId, 'action':action})
+    })
+    .then((response) =>{
+        return response.json()
+    })
+    .then((data) => {
+        console.log('data:', data)
+        location.reload()
+    })
+
+}
+</script>
+
+{% endblock %}
